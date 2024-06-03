@@ -23,17 +23,27 @@ export function BulbController({ bulbAlias }: { bulbAlias: string }) {
 	function togglePower(e: React.MouseEvent) {
 		const buttonElem = e.target as HTMLButtonElement
 
-		buttonElem.classList.add(style.pending_change)
+		buttonElem.disabled = true
 		if (powerState) {
-			powerOffBulb(bulbAlias).then(() => {
-				buttonElem.classList.remove(style.pending_change)
-				setPowerState(false)
-			})
+			powerOffBulb(bulbAlias)
+				.then(() => {
+					buttonElem.disabled = false
+					setPowerState(false)
+				})
+				.catch((err) => {
+					buttonElem.disabled = false
+					console.log(err)
+				})
 		} else {
-			powerOnBulb(bulbAlias).then(() => {
-				buttonElem.classList.remove(style.pending_change)
-				setPowerState(true)
-			})
+			powerOnBulb(bulbAlias)
+				.then(() => {
+					buttonElem.disabled = false
+					setPowerState(true)
+				})
+				.catch((err) => {
+					buttonElem.disabled = false
+					console.log(err)
+				})
 		}
 	}
 	if (bulbLoaded) {
